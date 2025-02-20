@@ -1,0 +1,7 @@
+name: bla
+services:
+  backend:
+    image: bla/backend
+    build: .
+    ports:
+      - '8000:8000'
