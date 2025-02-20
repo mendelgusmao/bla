@@ -5,7 +5,7 @@ from sqlalchemy import Column, DateTime, Integer, String
 from .base import Base
 
 
-class Task(Base):
+class TaskModel(Base):
     __tablename__ = "tasks"
 
     id = Column(Integer, primary_key=True, autoincrement=True)

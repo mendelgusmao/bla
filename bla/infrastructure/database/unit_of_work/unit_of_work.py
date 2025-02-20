@@ -1,5 +1,5 @@
 import logging
-from typing import Callable, Optional, Self
+from typing import Callable, Self
 
 from injector import inject
 from sqlalchemy.orm import Session
@@ -18,16 +18,15 @@ class UnitOfWork:
 
     def __exit__(
         self,
-        exc_type: Optional[type],
+        exc_type: type | None,
         exc_value: Exception,
         traceback: type,
     ) -> None:
+        print(f"EXC {exc_type} {exc_value} {traceback}")
+
         if exc_type:
             self.session.rollback()
         else:
             self.session.commit()
 
         self.session.close()
-
-        print("oi")
-        logger.info(f"exc_type: {exc_type}, exc_value: {exc_value}")

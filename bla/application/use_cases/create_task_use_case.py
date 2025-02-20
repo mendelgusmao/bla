@@ -4,10 +4,11 @@ from injector import inject
 
 from bla.application.interfaces.repositories import TasksRepository
 from bla.domain.entities import Task
+from bla.domain.entities.task import TaskRequest
 from bla.domain.interfaces.unit_of_work import UnitOfWork
 
 
-class GetTaskUseCase:
+class CreateTaskUseCase:
     @inject
     def __init__(
         self,
@@ -17,8 +18,11 @@ class GetTaskUseCase:
         self.repository = repository
         self.unit_of_work = unit_of_work
 
-    def execute(self, task_id: int) -> Task:
+    def execute(
+        self,
+        task: TaskRequest,
+    ) -> Task:
         with self.unit_of_work as uow:
-            task = self.repository.find_by_id(uow, task_id)
+            task = self.repository.create(uow, task.to_orm())
 
         return Task.from_orm(task)

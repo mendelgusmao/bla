@@ -1,6 +1,6 @@
-from .task import Base, Task  # noqa: F401
+from .task_model import Base, TaskModel  # noqa: F401
 
 __ALL__ = [
     "Base",
-    "Task",
+    "TaskModel",
 ]

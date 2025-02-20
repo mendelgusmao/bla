@@ -1,22 +1,20 @@
 from typing import Callable
 
-import injector
+from injector import Module, provider
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from bla.domain.models import Base
 
-DATABASE_URL = "sqlite:///:memory:"
+DSN = "sqlite:///:memory:"
 
 
-class DatabaseConnection(injector.Module):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        engine = create_engine(DATABASE_URL, echo=True)
-        self.session_maker = sessionmaker(bind=engine, expire_on_commit=False)
+class DatabaseConnection(Module):
+    def __init__(self):
+        engine = create_engine(DSN, echo=True)
         Base.metadata.create_all(engine)
+        self.session_maker = sessionmaker(bind=engine, expire_on_commit=False)
 
-    @injector.provider
+    @provider
     def provide_session_factory(self) -> Callable[[], Session]:
         return self.session_maker

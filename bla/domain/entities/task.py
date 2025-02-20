@@ -1,8 +1,9 @@
 from datetime import datetime
 from enum import StrEnum
-from typing import Optional
 
 from pydantic import Field
+
+from bla.domain.models import TaskModel
 
 from .base import Base
 
@@ -14,11 +15,19 @@ class TaskStatus(StrEnum):
     ABANDONED = "abandoned"
 
 
-class Task(Base):
-    id: int
-    user_id: Optional[int] = Field(alias="userId", default=None)
+class BaseTask(Base):
+    user_id: int | None = Field(alias="userId", default=None)
     title: str
     status: TaskStatus = TaskStatus.CREATED
+    due_at: datetime | None = Field(alias="dueAt", default=None)
+    finished_at: datetime | None = Field(alias="finishedAt", default=None)
+
+
+class Task(BaseTask):
+    id: int
     created_at: datetime = Field(alias="createdAt")
-    due_at: Optional[datetime] = Field(alias="dueAt", default=None)
-    finished_at: Optional[datetime] = Field(alias="finishedAt", default=None)
+
+
+class TaskRequest(BaseTask):
+    def to_orm(self):
+        return TaskModel(**self.dict())
